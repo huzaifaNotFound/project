@@ -1,16 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8">
+  <title>Cloud OS</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="">
-        <img  class="h-auto w-auto"  src="../backgroud.webp">
+
+  <!-- Wallpaper -->
+  <img id="wallpaper" src="./bg/bg7.webp" />
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div id="date"></div>
+    <div>Cloud OS</div>
+    <div id="time"></div>
+  </div>
+
+  <!-- Weather Widget -->
+  <div class="weather-widget" id="weather">
+    <div class="weather-top">
+      <div class="temp" id="temp">--°</div>
+      <div class="icon" id="icon">☁️</div>
     </div>
-    <script src="script.js"></script>
-    <script type="module" src="firebase.js"></script>
+
+    <div class="condition" id="condition">Loading...</div>
+
+    <div class="weather-bottom">
+      <div id="location">--</div>
+      <div id="details">--</div>
+    </div>
+  </div>
+
+  <!-- Settings Window -->
+<div class="window hidden" id="settingsWindow">
+  <div class="window-header" id="windowHeader">
+    <span>Settings</span>
+    <button id="closeWindow">✕</button>
+  </div>
+
+  <div class="window-body">
+    <h3>Wallpapers</h3>
+
+    <div class="bg-grid">
+      <img src="./bg/bg1.webp" data-bg="bg/bg1.webp">
+      <img src="./bg/bg2.webp" data-bg="bg/bg2.webp">
+      <img src="./bg/bg3.webp" data-bg="bg/bg3.webp">
+      <img src="./bg/bg4.webp" data-bg="bg/bg4.webp">
+      <img src="./bg/bg5.webp" data-bg="bg/bg5.webp">
+      <img src="./bg/bg6.webp" data-bg="bg/bg6.webp">
+      <img src="./bg/bg7.webp" data-bg="bg/bg7.webp">
+    </div>
+  </div>
+</div>
+
+
+
+
+  <!-- Dock -->
+  <div class="dock" id="dock">
+
+    <div class="dock-item">
+      <svg viewBox="0 0 24 24">
+        <rect width="16" height="20" x="4" y="2" rx="2"/>
+        <line x1="8" x2="16" y1="6" y2="6"/>
+        <line x1="16" x2="16" y1="14" y2="18"/>
+        <path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/>
+        <path d="M12 14h.01"/><path d="M8 14h.01"/>
+        <path d="M12 18h.01"/><path d="M8 18h.01"/>
+      </svg>
+    </div>
+
+    <div class="dock-item">
+      <svg viewBox="0 0 24 24">
+        <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    </div>
+
+    <div class="dock-item">
+      <svg viewBox="0 0 24 24">
+        <path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/>
+        <rect width="16" height="18" x="4" y="4" rx="2"/>
+        <path d="M8 10h6"/><path d="M8 14h8"/><path d="M8 18h5"/>
+      </svg>
+    </div>
+
+    <div class="dock-item">
+      <svg viewBox="0 0 24 24">
+        <path d="m11 10 3 3"/>
+        <path d="M6.5 21A3.5 3.5 0 1 0 3 17.5a2.62 2.62 0 0 1-.708 1.792A1 1 0 0 0 3 21z"/>
+        <path d="M9.969 17.031 21.378 5.624a1 1 0 0 0-3.002-3.002L6.967 14.031"/>
+      </svg>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
