@@ -9,6 +9,7 @@
 
   <!-- Wallpaper -->
   <img id="wallpaper" src="./bg/bg3.webp" />
+  <canvas id="liveWallpaper"></canvas>
 
   <!-- Top bar -->
   <div class="topbar">
@@ -23,44 +24,294 @@
       <div class="temp" id="temp">--°</div>
       <div class="icon" id="icon">☁️</div>
     </div>
-
     <div class="condition" id="condition">Loading...</div>
-
     <div class="weather-bottom">
       <div id="location">--</div>
       <div id="details">--</div>
     </div>
   </div>
 
-  <!-- Settings Window -->
-<div class="window hidden" id="settingsWindow">
-  <div class="window-header" id="windowHeader">
-    <span>Settings</span>
-    <button id="closeWindow">✕</button>
-  </div>
+  <!-- ═══════════════ SETTINGS WINDOW ═══════════════ -->
+  <div class="window hidden" id="settingsWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title">Settings</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body settings-body">
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-target="tab-appearance">Appearance</button>
+        <button class="settings-tab" data-target="tab-background">Wallpaper</button>
+      </div>
 
-  <div class="window-body">
-    <h3>Wallpapers</h3>
+      <div id="tab-appearance" class="settings-pane">
+        <h4>Theme Mode</h4>
+        <div class="theme-options">
+          <label><input type="radio" name="osTheme" value="dark" checked> Dark Glass (Default)</label>
+          <label><input type="radio" name="osTheme" value="light"> Light Glass</label>
+          <label><input type="radio" name="osTheme" value="cyberpunk"> Cyberpunk (Neon)</label>
+          <label><input type="radio" name="osTheme" value="hacker"> Hacker (Terminal)</label>
+          <label><input type="radio" name="osTheme" value="midnight"> Midnight (Pure Black)</label>
+        </div>
+        <h4 style="margin-top:16px;">Accent Color</h4>
+        <input type="color" id="osAccentColor" value="#4facfe" class="accent-picker">
+      </div>
 
-    <div class="bg-grid">
-      <img src="./bg/bg1.webp" data-bg="bg/bg1.webp">
-      <img src="./bg/bg2.webp" data-bg="bg/bg2.webp">
-      <img src="./bg/bg3.webp" data-bg="bg/bg3.webp">
-      <img src="./bg/bg4.webp" data-bg="bg/bg4.webp">
-      <img src="./bg/bg5.webp" data-bg="bg/bg5.webp">
-      <img src="./bg/bg6.webp" data-bg="bg/bg6.webp">
-      <img src="./bg/bg7.webp" data-bg="bg/bg7.webp">
+      <div id="tab-background" class="settings-pane hidden">
+        <h4>Live Wallpapers</h4>
+        <div class="live-bg-options">
+          <button id="liveBgGradient">🌈 Neon Gradient</button>
+          <button id="liveBgParticles">✨ Starfield</button>
+        </div>
+        <h4 style="margin-top:14px;">Static Images</h4>
+        <div class="bg-grid">
+          <img src="./bg/bg1.webp" data-bg="bg/bg1.webp" alt="bg1">
+          <img src="./bg/bg2.webp" data-bg="bg/bg2.webp" alt="bg2">
+          <img src="./bg/bg3.webp" data-bg="bg/bg3.webp" alt="bg3">
+          <img src="./bg/bg4.webp" data-bg="bg/bg4.webp" alt="bg4">
+          <img src="./bg/bg5.webp" data-bg="bg/bg5.webp" alt="bg5">
+          <img src="./bg/bg6.webp" data-bg="bg/bg6.webp" alt="bg6">
+          <img src="./bg/bg7.webp" data-bg="bg/bg7.webp" alt="bg7">
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
+  <!-- ═══════════════ CALCULATOR WINDOW ═══════════════ -->
+  <div class="window hidden" id="calculatorWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title">Calculator</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body calculator-body">
+      <input type="text" id="calcDisplay" readonly value="0">
+      <div class="calc-grid">
+        <button class="calc-btn" data-value="7">7</button>
+        <button class="calc-btn" data-value="8">8</button>
+        <button class="calc-btn" data-value="9">9</button>
+        <button class="calc-btn operator" data-op="/">÷</button>
+        <button class="calc-btn" data-value="4">4</button>
+        <button class="calc-btn" data-value="5">5</button>
+        <button class="calc-btn" data-value="6">6</button>
+        <button class="calc-btn operator" data-op="*">×</button>
+        <button class="calc-btn" data-value="1">1</button>
+        <button class="calc-btn" data-value="2">2</button>
+        <button class="calc-btn" data-value="3">3</button>
+        <button class="calc-btn operator" data-op="-">−</button>
+        <button class="calc-btn" data-value="0" style="grid-column:span 2;">0</button>
+        <button class="calc-btn" data-value=".">.</button>
+        <button class="calc-btn operator" data-op="+">+</button>
+        <button class="calc-btn equals" id="calcEquals">=</button>
+        <button class="calc-btn clear" id="calcClear" style="grid-column:span 4;">C</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- ═══════════════ FILES WINDOW ═══════════════ -->
+  <div class="window hidden" id="filesWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title">Files</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body files-body">
+      <div class="files-toolbar">
+        <span id="currentPath" class="path-label">/Home</span>
+        <button id="newFileBtn" class="action-btn">+ New File</button>
+      </div>
+      <!-- New file modal overlay -->
+      <div id="fileModal" class="hidden file-modal">
+        <input type="text" id="fileNameInput" placeholder="filename.txt">
+        <textarea id="fileContentInput" placeholder="File contents..."></textarea>
+        <div class="file-modal-actions">
+          <button id="fileCancelBtn">Cancel</button>
+          <button id="fileSaveBtn" class="action-btn">Save</button>
+        </div>
+      </div>
+      <div class="files-layout">
+        <div class="files-sidebar">
+          <div class="sidebar-item active">🏠 Home</div>
+          <div class="sidebar-item">📄 Documents</div>
+          <div class="sidebar-item">⬇️ Downloads</div>
+          <div class="sidebar-item">🖼️ Pictures</div>
+        </div>
+        <div id="filesList" class="files-main"></div>
+      </div>
+    </div>
+  </div>
 
+  <!-- ═══════════════ BROWSER WINDOW ═══════════════ -->
+  <div class="window hidden" id="browserWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title">Browser</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body browser-body">
+      <div class="browser-tabs-container">
+        <div class="browser-tabs" id="browserTabs"></div>
+        <button id="newTabBtn" class="new-tab-btn">+</button>
+      </div>
+      <div class="browser-toolbar">
+        <div class="browser-nav">
+          <button id="backBtn" class="nav-btn">◀</button>
+          <button id="forwardBtn" class="nav-btn">▶</button>
+          <button id="refreshBtn" class="nav-btn">↻</button>
+          <button id="homeBtn" class="nav-btn">⌂</button>
+        </div>
+        <div class="url-bar-container">
+          <input type="text" id="urlBar" placeholder="Search or type a URL">
+          <button id="bookmarkBtn" class="bookmark-btn">☆</button>
+        </div>
+      </div>
+      <div class="bookmarks-bar" id="bookmarksBar"></div>
+      <div class="loading-bar-container"><div id="loadingBar" class="loading-bar"></div></div>
+      <div id="browserFrames" class="browser-frames"></div>
+    </div>
+  </div>
 
-  <!-- Dock -->
+  <!-- ═══════════════ PAINT WINDOW ═══════════════ -->
+  <div class="window hidden" id="paintWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title">Paint</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body paint-body">
+      <div class="paint-toolbar">
+        <button id="paintBrushBtn" class="paint-tool active" title="Brush">🖌️</button>
+        <button id="paintEraserBtn" class="paint-tool" title="Eraser">🧹</button>
+        <div class="tool-sep"></div>
+        <input type="color" id="paintColor" value="#000000" title="Color">
+        <input type="range" id="paintSize" min="1" max="50" value="5" title="Brush Size">
+        <div class="tool-sep"></div>
+        <button id="paintUndoBtn" class="paint-tool" title="Undo">↩</button>
+        <button id="paintRedoBtn" class="paint-tool" title="Redo">↪</button>
+        <button id="paintClear" class="paint-tool paint-clear" title="Clear">🗑️</button>
+        <button id="paintSave" class="action-btn" style="margin-left:auto;padding:4px 12px;">Save</button>
+      </div>
+      <div class="paint-canvas-wrapper">
+        <canvas id="paintCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ NOTEPAD WINDOW ═══════════════ -->
+  <div class="window hidden" id="notepadWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title" id="notepadTitle">Notepad</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body notepad-body">
+      <textarea id="notepadText" placeholder="Start typing..."></textarea>
+      <div class="notepad-footer">
+        <button id="notepadSave" class="action-btn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TERMINAL WINDOW ═══════════════ -->
+  <div class="window hidden" id="terminalWindow">
+    <div class="window-header draggable-header">
+      <span class="window-title">Terminal</span>
+      <button class="close-btn">✕</button>
+    </div>
+    <div class="window-body terminal-body">
+      <div id="terminalOutput" class="terminal-output"></div>
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">user@cloud-os:~$</span>
+        <input type="text" id="terminalInput" class="terminal-input" spellcheck="false" autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ START MENU ═══════════════ -->
+  <div class="start-menu hidden" id="startMenu">
+    <div class="start-search-wrapper">
+      <input type="text" id="startSearch" placeholder="Search apps or files...">
+      <div id="searchResults" class="hidden search-results"></div>
+    </div>
+    <div class="start-menu-title">Applications</div>
+    <div class="app-grid">
+
+      <div class="app-item" data-app="calculator">
+        <svg viewBox="0 0 24 24">
+          <rect width="16" height="20" x="4" y="2" rx="2"/>
+          <line x1="8" x2="16" y1="6" y2="6"/>
+          <line x1="16" x2="16" y1="14" y2="18"/>
+          <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>
+        </svg>
+        <span>Calculator</span>
+      </div>
+
+      <div class="app-item" data-app="files">
+        <svg viewBox="0 0 24 24">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Files</span>
+      </div>
+
+      <div class="app-item" data-app="browser">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span>Browser</span>
+      </div>
+
+      <div class="app-item" data-app="settings">
+        <svg viewBox="0 0 24 24">
+          <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span>Settings</span>
+      </div>
+
+      <div class="app-item" data-app="terminal">
+        <svg viewBox="0 0 24 24">
+          <polyline points="4 17 10 11 4 5"/>
+          <line x1="12" y1="19" x2="20" y2="19"/>
+        </svg>
+        <span>Terminal</span>
+      </div>
+
+      <div class="app-item" data-app="notepad">
+        <svg viewBox="0 0 24 24">
+          <path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/>
+          <rect width="16" height="18" x="4" y="4" rx="2"/>
+          <path d="M8 10h6"/><path d="M8 14h8"/><path d="M8 18h5"/>
+        </svg>
+        <span>Notepad</span>
+      </div>
+
+      <div class="app-item" data-app="paint">
+        <svg viewBox="0 0 24 24">
+          <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/>
+          <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1 1.08 2.26 2.02 3.96 2.02 2.24 0 4.04-1.8 4.04-4.04 0-1.67-1.35-3.02-3-3.02z"/>
+        </svg>
+        <span>Paint</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="osContextMenu" class="context-menu hidden">
+    <div id="ctxNewFile" class="ctx-item">📄 New Text File</div>
+  </div>
+
+  <!-- ═══════════════ DOCK ═══════════════ -->
   <div class="dock" id="dock">
 
-    <div class="dock-item">
+    <!-- Start Menu Toggle -->
+    <div class="dock-item" id="startMenuBtn">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+      </svg>
+    </div>
+
+    <!-- Calculator -->
+    <div class="dock-item" data-app="calculator">
       <svg viewBox="0 0 24 24">
         <rect width="16" height="20" x="4" y="2" rx="2"/>
         <line x1="8" x2="16" y1="6" y2="6"/>
@@ -71,14 +322,32 @@
       </svg>
     </div>
 
-    <div class="dock-item">
+    <!-- Settings -->
+    <div class="dock-item" data-app="settings">
       <svg viewBox="0 0 24 24">
         <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
         <circle cx="12" cy="12" r="3"/>
       </svg>
     </div>
 
-    <div class="dock-item">
+    <!-- Files -->
+    <div class="dock-item" data-app="files">
+      <svg viewBox="0 0 24 24">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+
+    <!-- Browser -->
+    <div class="dock-item" data-app="browser">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    </div>
+
+    <!-- Notepad -->
+    <div class="dock-item" data-app="notepad">
       <svg viewBox="0 0 24 24">
         <path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/>
         <rect width="16" height="18" x="4" y="4" rx="2"/>
@@ -86,17 +355,25 @@
       </svg>
     </div>
 
-    <div class="dock-item">
+    <!-- Terminal -->
+    <div class="dock-item" data-app="terminal">
       <svg viewBox="0 0 24 24">
-        <path d="m11 10 3 3"/>
-        <path d="M6.5 21A3.5 3.5 0 1 0 3 17.5a2.62 2.62 0 0 1-.708 1.792A1 1 0 0 0 3 21z"/>
-        <path d="M9.969 17.031 21.378 5.624a1 1 0 0 0-3.002-3.002L6.967 14.031"/>
+        <polyline points="4 17 10 11 4 5"/>
+        <line x1="12" y1="19" x2="20" y2="19"/>
+      </svg>
+    </div>
+
+    <!-- Paint -->
+    <div class="dock-item" data-app="paint">
+      <svg viewBox="0 0 24 24">
+        <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/>
+        <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1 1.08 2.26 2.02 3.96 2.02 2.24 0 4.04-1.8 4.04-4.04 0-1.67-1.35-3.02-3-3.02z"/>
       </svg>
     </div>
 
   </div>
 
   <script src="script.js"></script>
-  <script type="module" src="script.js"></script>
+  <script type="module" src="firebase.js"></script>
 </body>
 </html>
