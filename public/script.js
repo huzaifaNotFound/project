@@ -848,7 +848,7 @@ function saveVFS(vfs) {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    model: "qwen/qwen3-coder:free",
+    model: "meta-llama/llama-3.1-8b-instruct:free",
           messages: [
             { role:"system", content:"You are Cloud OS AI Assistant, a helpful AI built into a web-based OS. You can open apps by responding with <OPEN_APP:appname>. Available apps: calculator, files, browser, settings, terminal, notepad, paint, camera. Use this tag only when the user explicitly wants to open an app. Keep responses concise and helpful." },
             ...chatHistory
