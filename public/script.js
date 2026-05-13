@@ -844,7 +844,7 @@ function saveVFS(vfs) {
     const typingEl = addTyping();
 
     try {
-      const resp = await fetch("/../api/chat", {
+      const resp = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
